@@ -1,144 +1,57 @@
-Here’s a **professional GitHub README** template for an **Object Detection using OpenCV** project, structured for clarity, technical appeal, and easy deployment:
+# Object Detection
 
----
+> A browser interface for live YOLOv3 object detection and AI-assisted image descriptions.
 
-```markdown
-# 🎯 Object Detection using OpenCV
+**Python · OpenCV DNN · YOLOv3 · Flask · NumPy**
 
-A Computer Vision project that performs real-time Object Detection using OpenCV and pre-trained Deep Learning models. The system identifies and highlights objects within images or video streams with bounding boxes and labels.
+## What it does
 
----
+- Streams a locally attached webcam into a Flask page.
+- Runs YOLOv3 inference with COCO labels and draws bounding boxes.
+- Applies confidence filtering and non-maximum suppression.
+- Exposes preview, horizontal flip, exposure, contrast, and detection controls.
+- Provides a separate image-upload page that requests a description from Gemini.
 
-## 🛠️ Technologies Used
+## How it works
 
-- **Python 3.x**
-- **OpenCV (cv2)**
-- **Pre-trained Models:**
-  - MobileNet-SSD
-  - YOLOv3 / YOLOv4 (Optional)
-  - Caffe-based DNN models
-- **Numpy**
-
----
-
-## 📂 Project Structure
-
+```text
+Webcam → OpenCV frame → YOLOv3 → bounding boxes → MJPEG browser stream
+Image upload → Flask upload route → Gemini → text description
 ```
 
-object-detection-opencv/
-├── models/                  # Pre-trained model files (e.g., .prototxt, .caffemodel)
-├── images/                  # Test images for detection
-├── videos/                  # Test videos for detection
-├── object\_detection.py      # Main detection script
-├── requirements.txt         # Dependencies
-└── README.md                 # Project documentation
+The webcam belongs to the machine running Flask. Detection is toggled through the interface.
 
-````
-
----
-
-## 🚀 Installation
-
-### Clone the Repository
+## Local setup
 
 ```bash
-git clone https://github.com/your-username/object-detection-opencv.git
-cd object-detection-opencv
-````
-
-### Install Dependencies
-
-```bash
-pip install -r requirements.txt
+git clone https://github.com/Pandiyaraj2004/object_detection.git
+cd object_detection
+python -m pip install -r requirements.txt
+python -m pip install Pillow google-generativeai
+cd models
+python dl-weights.py
+cd ..
+python application.py
 ```
 
----
+Open http://localhost:5000. The model downloader writes to its current directory, so run it from `models/`. The app expects `models/yolov3.weights`, alongside the committed configuration and class names.
 
-## 🎯 How to Run
+The upload integration uses a legacy Gemini client and model identifier. Replace the hardcoded credential with your own server-side environment configuration and select an available provider model before using that feature. The two extra packages above are imported by the application but absent from its requirements file.
 
-### Detect Objects in an Image
+## Code map
 
-```bash
-python object_detection.py --image images/sample.jpg
-```
+| File | Responsibility |
+| --- | --- |
+| [application.py](application.py) | Flask routes, upload analysis, camera controls |
+| [object_detection.py](object_detection.py) | YOLOv3 inference and video streaming |
+| [camera_settings.py](camera_settings.py) | Camera configuration |
+| [models](models) | COCO labels, network configuration, weight downloader |
+| [templates](templates) | Live detection and upload pages |
 
-### Detect Objects in a Video File
+## Current limits
 
-```bash
-python object_detection.py --video videos/sample.mp4
-```
-
-### Real-time Detection with Webcam
-
-```bash
-python object_detection.py --webcam 1
-```
-
-*Ensure pre-trained models are available in the `/models` directory.*
+Requires a working local camera and downloaded model weights. No inference speed or accuracy benchmark is claimed here. Use as a local demonstration; deployment needs credential handling, upload validation, and production server configuration.
 
 ---
 
-## ⚡ Example Output
-
-* Draws bounding boxes around detected objects
-* Displays object class names with confidence scores
-* Supports multiple object categories (person, car, dog, etc.)
-
----
-
-## 📦 Requirements
-
-* Python 3.7+
-* OpenCV
-* Numpy
-
-Install via:
-
-```bash
-pip install opencv-python numpy
-```
-
----
-
-## 🔥 Features
-
-✅ Real-time object detection with webcam
-✅ Image and video file detection
-✅ Supports various pre-trained models
-✅ Adjustable confidence thresholds
-
----
-
-## 📈 Future Improvements
-
-* Integration with YOLOv8 for enhanced accuracy
-* Deployment as a Streamlit web application
-* Model training with custom datasets
-
----
-
-## 🤝 Contribution
-
-Contributions are welcome. Please open issues for bugs, improvements, or feature requests.
-
----
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
-
----
-
-## 🙏 Acknowledgments
-
-* [OpenCV Documentation](https://docs.opencv.org/)
-* [Model Zoo](https://github.com/opencv/opencv_3rdparty)
-
----
-
-```
-
----
-
-**Need a README specific to YOLO, TensorFlow, or PyTorch integration?** Let me know, I can provide tailored versions for those setups too. Want me to generate code along with this? 🚀
-```
+Built by **Pandiyaraj A** · [Portfolio](https://pandiyaraj.netlify.app/) · [GitHub](https://github.com/Pandiyaraj2004) · [LinkedIn](https://www.linkedin.com/in/pandiyaraj-a-mca/)
